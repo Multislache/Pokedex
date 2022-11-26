@@ -12,6 +12,7 @@ import Pokemon as pk
 langue = 'eng'
 liste_pokemons = pk.Pokemon.table_name()                              # Pokemon
 nombre_de_pokemons = pk.Pokemon.effectif()  
+liste_pokemons2 = pk.Pokemon.table_nom()
 
 
 def affiche_pokemon(poke: pk.Pokemon):                                # Pokemon
@@ -118,10 +119,17 @@ maListeBox = tk.Listbox(fenetre, width=30, height=8, borderwidth=0,
                         selectborderwidth=0, selectmode='single',
                         highlightthickness=0, font=('arial', '16'))
 maListeBox.place(x=44, y=217)
-if liste_pokemons is not None:
-    for nom in liste_pokemons:
-        maListeBox.insert('end',nom)
-maListeBox_flag = True
+if langue =='eng':
+    if liste_pokemons is not None:
+        for nom in liste_pokemons:
+            maListeBox.insert('end',nom)
+    maListeBox_flag = True
+else:
+    if liste_pokemons2 is not None:
+        for nom in liste_pokemons2:
+            maListeBox.insert('end',nom)
+    maListeBox_flag = True
+    
 
 
 #############################
@@ -323,10 +331,18 @@ def boutonStart_clic(event):
     """Initialise l'affichage de la liste des pokemons."""
     global maListeBox_flag
     maListeBox.delete(0, 'end')
-    if liste_pokemons is not None:
-        for nom in liste_pokemons:
-            maListeBox.insert('end', nom)
-        maListeBox_flag = True
+    if langue == 'eng':
+        if liste_pokemons is not None:
+            for nom in liste_pokemons:
+                maListeBox.insert('end', nom)
+            maListeBox_flag = True
+    else:
+        if liste_pokemons2 is not None:
+            for nom in liste_pokemons2:
+                maListeBox.insert('end', nom)
+            maListeBox_flag = True
+        
+    
 
 
 def boutonLangue_clic(event):
