@@ -13,6 +13,7 @@ langue = 'eng'
 liste_pokemons = pk.Pokemon.table_name()                              # Pokemon
 nombre_de_pokemons = pk.Pokemon.effectif()  
 liste_pokemons2 = pk.Pokemon.table_nom()
+nombre_de_pokemons2 = pk.Pokemon.effectif2() 
 
 
 def affiche_pokemon(poke: pk.Pokemon):                                # Pokemon
@@ -118,6 +119,11 @@ monCanvas.create_image(0, 0, image=monFond, anchor="nw")
 maListeBox = tk.Listbox(fenetre, width=30, height=8, borderwidth=0,
                         selectborderwidth=0, selectmode='single',
                         highlightthickness=0, font=('arial', '16'))
+
+maListeBox2 = tk.Listbox(fenetre, width=30, height=8, borderwidth=0,
+                        selectborderwidth=0, selectmode='single',
+                        highlightthickness=0, font=('arial', '16'))
+
 maListeBox.place(x=44, y=217)
 if langue =='eng':
     if liste_pokemons is not None:
@@ -266,15 +272,37 @@ recherche.place(x = 180, y=600)
 #####################
 # Nombre de pokemon #
 #####################
+
 label_nbr_pokemons_texte = tk.Label(fenetre,
                                     text="Nombre de pokemons dans le pokedex",
                                     font=('arial', '16'))
 label_nbr_pokemons_texte.place(x=40, y=690)
-label_nbr_pokemons = tk.Label(fenetre, text=nombre_de_pokemons, font=('arial',
+
+if langue == 'eng':
+    label_nbr_pokemons = tk.Label(fenetre, text=nombre_de_pokemons, font=('arial',
                                                                       '16'))
+elif langue == 'fra':
+    label_nbr_pokemons = tk.Label(fenetre, text=nombre_de_pokemons2, font=('arial',
+                                                                      '16'))
+    
 label_nbr_pokemons.place(x=220, y=715)
 
 
+#####################
+#      Langue       #
+#####################
+
+
+
+
+affichage_langue = tk.Label(fenetre,
+                                    text="Le pokédex est en",
+                                        font=('arial', '12'))
+affichage_langue.place(x=300, y=150)
+
+langue_de = tk.Label(fenetre, text=langue, font=('arial',
+                                                                          '12'))
+langue_de.place(x=434, y=150)
 
 
 
@@ -289,24 +317,44 @@ label_nbr_pokemons.place(x=220, y=715)
 
 def boutonSelect_clic(event):
     """Déclenche l'affichage au clic sur le bouton select."""
-    if maListeBox_flag is True:
-        valeur = maListeBox.curselection()
-        if valeur == ():
-            print("rien n'a été sélectionné")
-        else:
-            poke_name = maListeBox.get(valeur[0])
-            poke = pk.Pokemon(poke_name)                              # Pokemon
-            affiche_pokemon(poke)
+    if langue =='eng':
+        if maListeBox_flag is True:
+            valeur = maListeBox.curselection()
+            if valeur == ():
+                print("rien n'a été sélectionné")
+            else:
+                poke_name = maListeBox.get(valeur[0])
+                poke = pk.Pokemon(poke_name)                              # Pokemon
+                affiche_pokemon(poke)
+    elif langue =='fra':
+        if maListeBox_flag is True:
+            valeur = maListeBox.curselection()
+            if valeur == ():
+                print("rien n'a été sélectionné")
+            else:
+                poke_nom = maListeBox.get(valeur[0])
+                poke = pk.Pokemon(poke_nom)                              # Pokemon
+                affiche_pokemon(poke)
+        
+        
 
 
 def boutonEvoDe_clic(event):
     """Déclenche l'affichage de l'ascendant du pokemon courant."""
     evolution_de = label_attribut_evolution["text"]
-    if evolution_de != "...":
-        affiche_pokemon(pk.Pokemon(evolution_de))                     # Pokemon
-        maListeBox.delete(0, 'end')
-        maListeBox.insert('end', evolution_de)
-        maListeBox.selection_set(0)
+    if langue =='eng':
+        if evolution_de != "...":
+            affiche_pokemon(pk.Pokemon(evolution_de))                     # Pokemon
+            maListeBox.delete(0, 'end')
+            maListeBox.insert('end', evolution_de)
+            maListeBox.selection_set(0)
+    else:
+        if langue == 'fra':
+             if evolution_de != "...":
+                affiche_pokemon(pk.Pokemon(evolution_de))                     # Pokemon
+                maListeBox.delete(0, 'end')
+                maListeBox.insert('end', evolution_de)
+                maListeBox.selection_set(0)
 
 
 def boutonEvoEn_clic(event):
@@ -318,13 +366,25 @@ def boutonEvoEn_clic(event):
         poke = pk.Pokemon(nom_pokemon)                                # Pokemon
         liste_evolutions = poke.descendants()                         # Pokemon
         maListeBox.delete(0, 'end')
-        if liste_evolutions == []:
-            maListeBox.insert('end', "Ce pokemon n'a pas d'évolution")
-            maListeBox_flag = False
+        if langue == 'eng':
+            if liste_evolutions == []:
+                maListeBox.insert('end', "Ce pokemon n'a pas d'évolution")
+                maListeBox_flag = False
+            else:
+                for poke in liste_evolutions:
+                    maListeBox.insert('end', poke.get_name())
+                maListeBox_flag = True
         else:
-            for poke in liste_evolutions:
-                maListeBox.insert('end', poke.get_name())
-            maListeBox_flag = True
+            if liste_evolutions == []:
+                maListeBox.insert('end', "Ce pokemon n'a pas d'évolution")
+                maListeBox_flag = False
+            else:
+                for poke in liste_evolutions:
+                    maListeBox.insert('end', poke.get_nom())
+                maListeBox_flag = True
+            
+        
+
 
 
 def boutonStart_clic(event):
@@ -348,21 +408,40 @@ def boutonStart_clic(event):
 def boutonLangue_clic(event):
     """Change la langue d'affichage des noms."""
     global langue
+    global langue_de
     if langue == 'fra':
         langue = 'eng'
-        
+        boutonStart_clic(event)
+        langue_de = tk.Label(fenetre, text=langue, font=('arial',
+                                                                          '12'))
+        langue_de.place(x=434, y=150)
     else:
         langue = 'fra'
+        boutonStart_clic(event)
+        langue_de = tk.Label(fenetre, text=langue, font=('arial',
+                                                                          '12'))
+        langue_de.place(x=438, y=150)
 
 def chercher_pokemon(event):
     """Déclenche la recherche d'un pokemon."""
-    name = recherche.get()
-    if name in pk.Pokemon.table_name():                               # Pokemon
-        poke = pk.Pokemon(name)                                       # Pokemon
-        affiche_pokemon(poke)
-        maListeBox.delete(0, 'end')
-        maListeBox.insert('end', poke.get_name())                     # Pokemon
-        maListeBox.selection_set(0)
+    
+    if langue =='eng':
+        name = recherche.get()
+        if name in pk.Pokemon.table_name():                               # Pokemon
+            poke = pk.Pokemon(name)                                       # Pokemon
+            affiche_pokemon(poke)
+            maListeBox.delete(0, 'end')
+            maListeBox.insert('end', poke.get_name())                     # Pokemon
+            maListeBox.selection_set(0)
+    elif langue =='fra':
+        nom = recherche.get()
+        if nom in pk.Pokemon.table_nom():                               # Pokemon
+            poke = pk.Pokemon(name)                                       # Pokemon
+            affiche_pokemon(poke)
+            maListeBox.delete(0, 'end')
+            maListeBox.insert('end', poke.get_nom())                     # Pokemon
+            maListeBox.selection_set(0)
+        
 
 
 #############################
