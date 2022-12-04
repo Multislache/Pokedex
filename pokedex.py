@@ -292,8 +292,7 @@ label_nbr_pokemons.place(x=220, y=715)
 #####################
 affichage_langue = tk.Label(fenetre,text="Le pokédex est en",font=('arial', '12'))
 affichage_langue.place(x=300, y=150)
-
-langue_de = tk.Label(fenetre, text=langue, font=('arial','12'))
+langue_de = tk.Label(fenetre, text='english', font=('arial','12'))
 langue_de.place(x=434, y=150)
 
 
@@ -404,17 +403,16 @@ def boutonStart_clic(event):
 def boutonLangue_clic(event):
     """Change la langue d'affichage des noms."""
     global langue
-    global langue_de
     if langue == 'fra':
         langue = 'eng'
         boutonStart_clic(event)
-        langue_de = tk.Label(fenetre, text=langue, font=('arial','12'))
+        langue_de.config(text='anglais')
         langue_de.place(x=434, y=150)
     else:
         langue = 'fra'
         boutonStart_clic(event)
-        langue_de = tk.Label(fenetre, text=langue, font=('arial','12'))
-        langue_de.place(x=438, y=150)
+        langue_de.config(text='français')
+        langue_de.place(x=434, y=150)
 
 def chercher_pokemon(event):
     """Déclenche la recherche d'un pokemon."""
